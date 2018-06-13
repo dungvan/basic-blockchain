@@ -10,7 +10,7 @@ import (
 
 var maxNonce = math.MaxInt64
 
-const targetBits = 17
+const targetBits = 21
 
 // ProofOfWork represents a proof-of-work
 type ProofOfWork struct {
