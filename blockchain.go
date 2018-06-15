@@ -12,20 +12,20 @@ const (
 	blocksBucket = "blocks"
 )
 
-// BlockChain keeps a sequence of Blocks
-type BlockChain struct {
+// Blockchain implements interactions with a DB
+type Blockchain struct {
 	tip []byte
 	db  *bolt.DB
 }
 
-// BlockChainIterator is used to iterate over blockchain blocks
-type BlockChainIterator struct {
+// BlockchainIterator is used to iterate over blockchain blocks
+type BlockchainIterator struct {
 	currentHash []byte
 	db          *bolt.DB
 }
 
 // AddBlock saves provided data as a block in the blockchain
-func (bc *BlockChain) AddBlock(data string) {
+func (bc *Blockchain) AddBlock(data string) {
 	var lastHash []byte
 
 	err := bc.db.View(func(tx *bolt.Tx) error {
@@ -59,15 +59,15 @@ func (bc *BlockChain) AddBlock(data string) {
 	})
 }
 
-// Iterator ...
-func (bc *BlockChain) Iterator() *BlockChainIterator {
-	bci := &BlockChainIterator{bc.tip, bc.db}
+// Iterator returns a BlockchainIterat
+func (bc *Blockchain) Iterator() *BlockchainIterator {
+	bci := &BlockchainIterator{bc.tip, bc.db}
 
 	return bci
 }
 
 // Next returns next block starting from tip
-func (i *BlockChainIterator) Next() *Block {
+func (i *BlockchainIterator) Next() *Block {
 	var block *Block
 	err := i.db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(blocksBucket))
@@ -85,8 +85,8 @@ func (i *BlockChainIterator) Next() *Block {
 	return block
 }
 
-// NewBlockChain creates a new Blockchain with genesis Block
-func NewBlockChain() *BlockChain {
+// NewBlockchain creates a new Blockchain with genesis Block
+func NewBlockchain() *Blockchain {
 	var tip []byte
 	db, err := bolt.Open(dbFile, 0600, nil)
 	if err != nil {
@@ -126,6 +126,6 @@ func NewBlockChain() *BlockChain {
 		log.Panic(err)
 	}
 
-	bc := BlockChain{tip, db}
+	bc := Blockchain{tip, db}
 	return &bc
 }

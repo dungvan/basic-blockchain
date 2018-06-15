@@ -10,7 +10,7 @@ import (
 
 // CLI responsible for processing command line arguments
 type CLI struct {
-	bc *BlockChain
+	bc *Blockchain
 }
 
 func (cli *CLI) printUsage() {
